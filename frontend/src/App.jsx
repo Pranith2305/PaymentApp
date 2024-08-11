@@ -1,11 +1,14 @@
+import { Route, Routes } from "react-router-dom"
 
 function App() {
 
   return (
-    <div>
-        Hello world
-    </div>
+    <>
+      <Routes>
+        <Route/>
+      </Routes>
+    </>
   )
 }
 
-export default App
+export default App 
