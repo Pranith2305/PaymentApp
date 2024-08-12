@@ -4,23 +4,24 @@ const { authMiddleware } = require('../middleware');
 const { default: mongoose } = require('mongoose');
 const router = express.Router();
 
-router.get('/balance', async (req, res, next) => {
+router.get('/balance', authMiddleware, async (req, res, next) => {
     const account = await Account.findOne({
         userId: req.body.userId
-    })
+    });
     res.json({
         balance: account.balance
-    })
-})
+    });
+});
 
-router.post('/transfer', authMiddleware, async (req, res)=> {
-    const session = mongoose.startSession();
+router.post('/transfer', authMiddleware, async (req, res) => {
+    const session = await mongoose.startSession();
     session.startTransaction();
-    const {amount, to} = req.body;
+
+    const { amount, to } = req.body;
 
     const account = await Account.findOne({
-        userId : req.userId
-    }).session(session)
+        userId: req.userId
+    }).session(session);
 
     if (!account || account.balance < amount) {
         await session.abortTransaction();
@@ -31,7 +32,7 @@ router.post('/transfer', authMiddleware, async (req, res)=> {
 
     const toAccount = await Account.findOne({
         userId: to
-    }).session(session)
+    }).session(session);
 
     if (!toAccount) {
         await session.abortTransaction();
@@ -46,14 +47,11 @@ router.post('/transfer', authMiddleware, async (req, res)=> {
 
     // Commit the transaction
     await session.commitTransaction();
+    session.endSession();
+
     res.json({
         message: "Transfer successful"
     });
+});
 
-
-})
-
-model.exports = { 
-    router
-}
-
+module.exports = router;

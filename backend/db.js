@@ -1,6 +1,6 @@
 // backend/db.js
 const mongoose = require('mongoose');
-const { number } = require('zod');
+
 
 // Create a Schema for Users
 const userSchema = new mongoose.Schema({
@@ -39,7 +39,7 @@ const accountSchema = new mongoose.Schema({
         required : true,
     },
     balance : {
-        type : number,
+        type : Number,
         required: true
     }
 })

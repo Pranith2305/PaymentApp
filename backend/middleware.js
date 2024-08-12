@@ -8,12 +8,12 @@ const authMiddleware = (req,res,next) => {
         return res.json({});
     }
 
-    const token = authHeader.split('')[1];
+    const token = authHeader.split(' ')[1];
 
     try{
     
         const decode = jwt.verify(token, JWT_SECRET);
-        req.useId = decode.useId;
+        req.userId = decode.userId;
         next()
     }
     catch(err){
