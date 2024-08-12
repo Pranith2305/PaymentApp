@@ -1,5 +1,6 @@
 // backend/db.js
 const mongoose = require('mongoose');
+const { number } = require('zod');
 
 // Create a Schema for Users
 const userSchema = new mongoose.Schema({
@@ -31,9 +32,24 @@ const userSchema = new mongoose.Schema({
     }
 });
 
+const accountSchema = new mongoose.Schema({
+    userId : {
+        type : mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required : true,
+    },
+    balance : {
+        type : number,
+        required: true
+    }
+})
+
 // Create a model from the schema
 const User = mongoose.model('User', userSchema);
+const Account = mongoose.model('Account', accountSchema);
+
 
 module.exports = {
-	User
+	User,
+    Account
 };
